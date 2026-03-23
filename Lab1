@@ -1,0 +1,30 @@
+# Jonas Himawan
+# Partner Name: Joonbeom Suhr
+# 1/7/26
+# EE 241
+# Lab 1 
+# Section D
+# The Lab 1 Report includes exercises that practice basic Python concepts such as
+# calculating Euclidean distance, working with sine and cosine values, manually
+# implementing sinh(x), creating an XOR logical expression, and indexing lists.
+from IPython.display import Image #For displaying images in colab jupyter cell
+import math
+# Behavior:
+# Calculates the Euclidean distance between two points,
+# (3, 4) and (5, 9), using the distance formula.
+
+# Exceptions:
+# None
+
+# Returns:
+# None
+
+# Parameters:
+# None
+x1 = 3
+y1 = 4
+
+x2 = 5
+y2 = 9
+dist = math.sqrt((x2 - x1)**2 + (y2 - y1)**2) #Equation for finding the Euclidean Distance between the points (3,4) and (5,9)
+print(dist)
