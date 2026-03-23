@@ -4,27 +4,97 @@
 # EE 241
 # Lab 1 
 # Section D
+
 # The Lab 1 Report includes exercises that practice basic Python concepts such as
 # calculating Euclidean distance, working with sine and cosine values, manually
 # implementing sinh(x), creating an XOR logical expression, and indexing lists.
 from IPython.display import Image #For displaying images in colab jupyter cell
 import math
+
 # Behavior:
-# Calculates the Euclidean distance between two points,
-# (3, 4) and (5, 9), using the distance formula.
-
+  # Calculates the Euclidean distance between two points,
+  # (3, 4) and (5, 9), using the distance formula.
 # Exceptions:
-# None
-
+  # None
 # Returns:
-# None
-
+  # None
 # Parameters:
-# None
+  # None
 x1 = 3
 y1 = 4
-
 x2 = 5
 y2 = 9
 dist = math.sqrt((x2 - x1)**2 + (y2 - y1)**2) #Equation for finding the Euclidean Distance between the points (3,4) and (5,9)
 print(dist)
+
+# Behavior:
+  # Calculates the sine and cosine values for several angles
+  # (180°, 90°, 45°, and 30°). The angles are converted from
+  # degrees to radians since Python’s math functions use radians.
+# Exceptions:
+  # None
+# Returns:
+  # None
+# Parameters:
+  # None
+sine_list = [math.sin(math.radians(180)),math.sin(math.radians(90)), math.sin(math.radians(45)), math.sin(math.radians(30))]
+cosine_list = [math.cos(math.radians(180)),math.cos(math.radians(90)),math.cos(math.radians(45)),math.cos(math.radians(30))]
+print(sine_list)
+print(cosine_list)
+
+# Behavior:
+  # Calculates the hyperbolic sine of x = 2 using the mathematical
+  # definition of sinh(x), then compares the result to Python's
+  # built-in math.sinh() function to confirm they match.
+# Exceptions:
+  # None
+# Returns:
+  # None
+# Parmeters:
+  # None
+sinh_manual = ((math.exp(2) - math.exp(-2)) / 2 ) # Manually implemented sinh(x) when x = 2
+alue_match = round(sinh_manual, 5) == round(math.sinh(2), 5) # Using comparison operator to compare sinh_manul with math.sinh(2) both roudned to 5 decimal places
+print(value_match) # Seeing if the value is True 
+
+# Behavior:
+  # Tests a logical XOR (exclusive OR) expression using different
+  # combinations of boolean values to show when the expression
+  # evaluates to True or False.
+# Exceptions:
+  # None
+# Returns:
+  # None
+# Parameters:
+  # None
+p1, q1 = False, False
+p2, q2 = True, False
+p3, q3 = False, True
+p4, q4 = True, True
+# xor expression for p1, q1
+print((p1 or q1) and not(p1 and q1))
+# xor expression for p2, q2
+print ((p2 or q2) and not(p2 and q2))
+# xor expression for p3, q3
+print ((p3 or q3) and not(p3 and q3))
+# xor expression for p3, q3
+print ((p3 or q3) and not(p3 and q3))
+
+# Behavior:
+  # Creates a list of numbers from 0 to 100 and shows how slicing works
+  # by selecting different parts of the list using index positions.
+# Exceptions:
+  # None
+# Returns:
+  # None
+# Parameters:
+  # None
+sample_list = list(range(101))
+# Prints the last 25 values in the sample_list
+print (sample_list[-25:])
+# Prints values that fall into 1/4 to 3/4 of the list's length
+print (sample_list[25:75])
+# Prints values that correspond to every even index
+print(sample_list[0::2])   
+# Prints values that correspond to every odd index
+print(sample_list[1::2])   
+
