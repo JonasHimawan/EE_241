@@ -1,0 +1,190 @@
+# This report demonstrates basic signal processing concepts using NumPy.
+# It creates and visualizes waveforms, compares loop-based array operations
+# combines musical notes and chords, and prodcues them as WAV audio files.
+
+import numpy as np
+from IPython.display import Image #For displaying images in colab jupyter cell
+import matplotlib.pyplot as plt
+from scipy.io.wavfile import write
+from IPython.display import Audio
+
+
+# Behavior:
+  # - Uses two different methods to combine two 2d-arrays and then compares the time for each.
+import time # Import time to measure computational efficiency of the code
+arr2d_1 = np.random.randn(1000, 1000) * 10
+arr2d_2 = np.random.randn(1000, 1000) * 10
+
+# Elementwise addition using loop
+arr2d_3_loop = np.zeros((1000, 1000)) # Create a placeholder array for arr2d_3
+start_time_loop = time.time() # start time of the code
+
+# Nested loop, one for the columns and the other for the row
+for row in range(1000):
+  for column in range(1000):
+    arr2d_3_loop[row,column] = arr2d_1[row, column] + arr2d_2[row, column]
+end_time_loop = time.time() # end time of the code
+elapsed_time_loop = end_time_loop - start_time_loop # end time - start time -> elapsed time in seconds
+print(elapsed_time_loop)
+
+# Elementwise addition using Numpy function
+start_time_np = time.time()
+arr2d_3_np = np.add(arr2d_1, arr2d_2) # Numpy function to add arrays
+end_time_np = time.time()
+elapsed_time_np = end_time_np - start_time_np
+print(elapsed_time_np)
+
+# Make sure two outputs are equivalent
+np.sum(arr2d_3_loop == arr2d_3_np) == 1000 * 1000 # Should output True if the outputs are same
+
+print(f"Numpy is {elapsed_time_loop - elapsed_time_np} seconds faster!")
+print (f"It is faster by a factor of {elapsed_time_loop/elapsed_time_np}")
+
+
+# Behavior:
+# - Creates a triangular waveform using an arcsine formula.
+# - Plots the waveform as an amplitude versus time(seconds) graph.
+# Exceptions, Returns, Parameters:
+# - None
+# Constants and Equations
+Amp = 1
+freq = 0.5
+sampFreq = 1/10
+x = np.arange(0, 6, sampFreq)
+y = Amp * (2/np.pi) * np.arcsin(np.sin(2 * np.pi * freq * x - np.pi/2))
+
+# Plot
+plt.title('Triangular Waveform Graph')
+plt.xlabel('Time (Seconds)')
+plt.ylabel('Amplitude')
+plt.yticks([-1, 0, 1])
+plt.stem(x, y)
+plt.plot(x, y)
+
+
+# Behavior:
+    # - Uses a sinusoidal generator to create 3 sine waves functions which are
+    #   then used to create 3 plots
+
+# Behavior:
+    # - Generates a sine wave over a specified duration.
+# Exceptions:
+    # - None
+# Returns:
+    # - t_arr: A numpy.ndarray that represents the time samples
+    # - amplitudes: A numpy.ndarray that represents the sine wave amplitudes
+# Parameters:
+    # - t_duration (float): Duration of the signal in seconds
+    # - f0 (float): Frequency of the sine wave in Hz
+    # - fs (int): Sampling frequency in Hz
+def generate_sine(t_duration, f0, fs):
+    t_arr = np.arange(0 , t_duration, 1/fs)
+    amplitudes = np.sin(2 * np.pi * f0 * t_arr)
+    
+    # Return 1D numpy arrays each containing timepoints and sine waveform amplitudes
+    return t_arr, amplitudes 
+
+# parameter set 1
+t_duration_1 = 5
+f0_1 = 0.5
+fs_1 = 100
+t_arr_1, amplitudes_1 = generate_sine(t_duration_1, f0_1, fs_1)
+
+# parameter set 2
+t_duration_2 = 5
+f0_2 = 1.
+fs_2 = 100
+t_arr_2, amplitudes_2 = generate_sine(t_duration_2, f0_2, fs_2)
+
+# parameter set 3
+t_duration_3 = 5
+f0_3 = 1.5
+fs_3 = 100
+t_arr_3, amplitudes_3 = generate_sine(t_duration_3, f0_3, fs_3)
+
+# Plot 3 x 1 subplot showing all three waveform
+plt.figure(figsize=(8, 8))
+plt.subplot(311)
+plt.plot(t_arr_1, amplitudes_1)
+plt.title('Sine Wave: f = 0.5 Hz')
+plt.xlabel('Time (seconds)')
+plt.ylabel('Amplitude')
+
+plt.subplot(312)
+plt.plot(t_arr_2, amplitudes_2)
+plt.title('Sine Wave: f = 1 Hz')
+plt.xlabel('Time (seconds)')
+plt.ylabel('Amplitude')
+
+plt.subplot(313)
+plt.plot(t_arr_3, amplitudes_3)
+plt.title('Sine Wave: f = 1.5 Hz')
+plt.xlabel('Time (seconds)')
+plt.ylabel('Amplitude')
+plt.tight_layout()
+
+# Behavior:
+  # - Generates notes in an A major scale.
+  # - Combines all of the notes into a melody.
+  # - Prodcues a WAV audio file of the melody.
+# Exceptions, Returns, Parameters:
+  # - None
+from scipy.io.wavfile import write
+from IPython.display import Audio
+fs = 8000
+note_duration = 1
+
+# Defines notes in A major scale
+semitones = [0, 2, 4, 5, 7, 9, 11, 12]
+frequencies = [220 * 2**(k/12) for k in semitones]
+notes = []
+
+# Creates 8 notes
+for f in frequencies:
+    time, amp = generate_sine(note_duration, f, fs)
+    notes.append(amp)
+
+# Creates melody combining the chords
+melody = np.concatenate(notes)
+melody_int16 = np.int16(melody * 32767)
+write("a_major_scale.wav", fs, melody_int16)
+Audio("a_major_scale.wav")
+
+# Behavior:
+  # - Generates notes in an A major scale.
+  # - Combines selected notes to create two-note chords.
+  # - Combines chords into a melody.
+  # - Writes the result of the melody to a WAV audio file.
+# Exceptions, Returns, Parameters:
+  # - None
+
+# Code is similar to exercise 5 but before the melody is made,
+# A two-note chord is concatenated
+fs = 8000
+note_duration = 1
+
+# Defines notes in A major scale
+semitones = [0, 2, 4, 5, 7, 9, 11, 12]
+frequencies = [220 * 2**(k/12) for k in semitones]
+notes = []
+
+# Creates 8 notes
+for f in frequencies:
+    time, amp = generate_sine(note_duration, f, fs)
+    notes.append(amp)
+chords = []
+
+# Creates 6 chords, each one combining every other note
+for i in range(6):
+    chord = notes[i] + notes[i+2]
+    chord /= 2
+    chords.append(chord)
+
+# Creates melody combining the chords
+melody = np.concatenate(chords)
+melody_int16 = np.int16(melody * 32767)
+write("a_major_scale.wav", fs, melody_int16)
+
+Audio("a_major_scale.wav")
+
+
