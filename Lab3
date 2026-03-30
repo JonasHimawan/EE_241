@@ -1,0 +1,102 @@
+# Lab 3 Report
+# Group Members: Jonas Himawan, Joonbeom Suhr
+# This report demonstrates image processing concepts through functions that perform 
+# pixel manipulation, image downsampling, blending, rotation, and visualization of a 
+# two-dimensional Gaussian function.
+
+import matplotlib.pyplot as plt
+import matplotlib.image as mpimg
+import numpy as np
+from PIL import Image 
+%matplotlib inline
+from IPython.display import Image as ipyimage #For displaying images in colab jupyter cell
+
+### Exercise 1: Generalized function for subsetting pixels
+  e1_img = Image.open('sample_image_1.jpg').convert('L')
+  e1_img = np.array(e1_img)     # 8-bit code grayscale
+  fig = plt.figure(figsize=(7, 7))
+  plt.imshow(e1_img, cmap = 'gray')
+  #Behavior:
+      # - Produces a new image in which pixel values outside a specified
+      #   intensity range is replaced with a given value.
+  #Exceptions:
+      # - None
+  #Returns:
+      # - A new image array with the same dimensions as the input image, where all
+          pixel values below the minimum or above the maximum intensity
+          have been replaced.
+  #Parameters:
+      # - image: A 2D or 3D array representing an image.
+      # - min_pixel_depth: The lower bound of the allowed pixel intensity range (inclusive).
+      # - max_pixel_depth: The upper bound of the allowed pixel intensity range (inclusive).
+      # - replacement_val: The value assigned to pixels whose intensities fall outside the specified range.
+  def subset_pixels(image, min_pixel_depth, max_pixel_depth, replacement_val):
+      new_image = image.copy()
+      new_image[new_image < min_pixel_depth] = replacement_val
+      new_image[new_image > max_pixel_depth] = replacement_val
+      return new_image
+  # min_pixel_depth = 50, max_pixel_depth = 250, replacement_val = 100
+  fig = plt.figure(figsize=(7, 7))
+  e1_output1 = subset_pixels(image = e1_img, min_pixel_depth = 50, max_pixel_depth = 250, replacement_val = 100)
+  plt.imshow(e1_output1, cmap = 'gray', vmin = 0, vmax = 255)
+  plt.savefig('e1_output1.png')
+  
+  # min_pixel_depth = 100, max_pixel_depth = 200, replacement_val = 30
+  fig = plt.figure(figsize=(7, 7))
+  e1_output2 = subset_pixels(image = e1_img, min_pixel_depth = 100, max_pixel_depth = 200, replacement_val = 30)
+  plt.imshow(e1_output2, cmap = 'gray', vmin = 0, vmax = 255)
+  plt.savefig('e1_output2.png')
+  
+  # min_pixel_depth = 50, max_pixel_depth = 255, replacement_val = 255
+  fig = plt.figure(figsize=(7, 7))
+  e1_output3 = subset_pixels(image = e1_img, min_pixel_depth = 50, max_pixel_depth = 255, replacement_val = 255)
+  plt.imshow(e1_output3, cmap = 'gray', vmin = 0, vmax = 255)
+  plt.savefig('e1_output3.png')
+
+### Exercise 2: Thumbnail generator function
+  e2_img = mpimg.imread('sample_image_2.jpg')
+  e2_img = np.array(e2_img)    
+  fig = plt.figure(figsize=(7, 7))
+  plt.imshow(e2_img)
+
+fig = plt.figure(figsize=(7, 7))
+plt.imshow(e2_img)
+#Behavior:
+    # - Produces a smaller version of the input image with reduced resolution.
+#Exceptions:
+    # - None
+#Returns:
+    # - A new image with reduced height and width that represents a scaled down verison of the original image.
+#Parameters:
+    # - image: A color image represented as a 3D array.
+    # - downsampling_rate: A positive integer that specifies the factor by which the resolution is reduced.
+def create_thumbnail(image, downsampling_rate):
+    # Segment Average Method
+    H, W, C = image.shape
+    new_H = int(H / downsampling_rate) 
+    new_W = int(W / downsampling_rate)
+
+    blocks = image.reshape(new_H, downsampling_rate, new_W, downsampling_rate, C)
+    temp = blocks.mean(axis = 3)
+    output = temp.mean(axis = 1)
+    output_image = np.round(output).astype(np.uint8)      
+    return output_image
+
+fig = plt.figure(figsize=(7, 7))
+e2_output1 = create_thumbnail(image = e2_img, downsampling_rate = 5)
+plt.imshow(e2_output1, vmin = 0, vmax = 255)
+plt.savefig('e2_output1.png')
+
+# downsampling rate x10
+fig = plt.figure(figsize=(7, 7))
+e2_output2 = create_thumbnail(image = e2_img, downsampling_rate = 10)
+plt.imshow(e2_output2, vmin = 0, vmax = 255)
+plt.savefig('e2_output2.png')
+
+# downsampling rate x20
+fig = plt.figure(figsize=(7, 7))
+e2_output3 = create_thumbnail(image = e2_img, downsampling_rate = 20)
+plt.imshow(e2_output3, vmin = 0, vmax = 255)
+plt.savefig('e2_output3.png')
+
+
